@@ -44,3 +44,25 @@
    `git clone https://github.com/esrora/tablon-avisos.git`
    `php -S 0.0.0.0:8000`
 
+## Ejercicio A1.4: Endurecimiento y preparación del entorno de producción
+
+**Proceso de configuración y comandos principales:**
+1. Sobre la máquina virtual pro.grupo7, creamos el usuario de servicio dedicado al sistema, sin carpeta personal ni intérprete de órdenes, comprobando que se deniega el inicio de sesión:
+   `sudo useradd -r -s /usr/sbin/nologin tablonsu - tablon`
+
+2. Creamos el directorio exclusivo de la aplicación asignando al usuario de servicio como propietario:
+   `sudo mkdir -p /opt/tablonsudo chown -R tablon:tablon /opt/tablon`
+   
+3. Instalamos y configuramos el cortafuegos ufw estableciendo una política restrictiva y permitiendo exclusivamente los puertos de administración y tráfico web:
+   `sudo apt update && sudo apt install -y ufw`
+   `sudo ufw default deny incomingsudo ufw default allow outgoing`
+   `sudo ufw allow 22/tcp && sudo ufw allow 80/tcp && sudo ufw allow 443/tcp`
+   `sudo ufw enable`
+
+4. Instalamos el servidor web Nginx y comprobamos que sirve la página de prueba por defecto en el puerto 80:
+   `sudo apt install -y nginx`
+   `sudo systemctl enable --now nginx`
+   `curl -I http://localhost`
+
+5. Verificamos desde la máquina dev.grupo7 que los puertos internos o de desarrollo de producción (como el puerto 3000) permanecen incomunicados y protegidos:
+   `nc -zv 192.168.56.153 3000`
