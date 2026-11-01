@@ -3,16 +3,16 @@
 ### Ejercicio A1.1: La lista de las siete carencias
 
 1. Se utiliza ROOT y no requiere contraseña.
-   - **Consecuencia con usuarios reales:** Cualquier persona o atacante podría acceder a la base de datos con privilegios totales, permitiendo la lectura, modificación o borrado malintencionado de todos los datos de los usuarios sin ningún obstáculo de seguridad.
+   - **Consecuencia con usuarios reales:** Cualquier atacante podría acceder a la base de datos con privilegios totales, permitiendo la lectura, modificación o borrado de todos los datos de los usuarios.
 
 2. Hay que iniciar el panel de control de Xampp, abrir el servidor de Apache y mySQL y abrir la URL del proyecto (http://localhost/proyectoMercado/index.php).
-   - **Consecuencia con usuarios reales:** El servicio depende de una intervención manual; si el servidor se reinicia por un fallo eléctrico o actualización, la aplicación quedará fuera de servicio indefinidamente hasta que un administrador inicie los servicios a mano, generando caídas prolongadas para los usuarios.
+   - **Consecuencia con usuarios reales:** Si el servidor se reinicia por un fallo eléctrico, la aplicación quedará caída indefinidamente hasta que alguien intervenga de forma manual.
 
 3. Queda registrado en la ruta C:\xampp\php\logs\php_error_log.
-   - **Consecuencia con usuarios reales:** Al estar los logs almacenados en local de forma estática en una sola máquina sin rotación ni monitorización centralizada, es imposible detectar ataques en tiempo real o auditar fallos del sistema antes de que afecten gravemente a los usuarios.
+   - **Consecuencia con usuarios reales:** Al estar los logs guardados de forma estática en una sola máquina sin monitorización, es imposible detectar errores o brechas de seguridad a tiempo.
 
 4. Mi versión es la php 8.2.12 y la de mi compañero es la misma.
-   - **Consecuencia con usuarios reales:** Al depender de versiones instaladas manualmente en entornos locales sin aislamiento (como Docker), cualquier desajuste o actualización no controlada en el servidor de producción puede romper la compatibilidad y provocar errores inesperados a los usuarios.
+   - **Consecuencia con usuarios reales:** Al depender de instalaciones locales manuales sin aislamiento, cualquier actualización imprevista puede romper la compatibilidad y dejar la aplicación inaccesible.
 
 
 ## Ejercicio A1.2: Las dos máquinas del grupo
