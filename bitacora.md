@@ -66,3 +66,37 @@
 
 5. Verificamos desde la máquina dev.grupo7 que los puertos internos o de desarrollo de producción (como el puerto 3000) permanecen incomunicados y protegidos:
    `nc -zv 192.168.56.153 3000`
+
+## Ejercicio A1.5: Despliegue y configuración del entorno de producción
+
+**Proceso de configuración y comandos principales:**
+1. Preparamos el entorno de base de datos en la máquina virtual pro.grupoN instalando Node.js y PostgreSQL, creando la base de datos de producción e importando el esquema sin incluir el archivo de datos iniciales en el artefacto:
+   `sudo apt update && sudo apt install -y nodejs postgresql`
+   `sudo -u postgres psql -c "CREATE DATABASE tablon_db;"`
+   `sudo -u postgres psql -d tablon_db -f init.sql`
+
+2. Construimos el artefacto de aplicación en dev.grupoN instalando únicamente las dependencias de producción y empaquetando la API junto al cliente web en un archivo comprimido que incluye la versión:
+   `npm install --production`
+   `tar -czvf tablon-v1.0.0.tgz dist/ package.json node_modules/ client/`
+3. Transferimos el artefacto a pro.grupoN, creamos la ruta de despliegue correspondiente y desempaquetamos los ficheros en su directorio de destino:
+   `sudo mkdir -p /opt/tablon`
+   `sudo tar -xzvf tablon-v1.0.0.tgz -C /opt/tablon`
+
+4. Escribimos y habilitamos el archivo de unidad de servicio de systemd (tablon-api.service) para garantizar la persistencia del proceso backend:
+   `sudo nano /etc/systemd/system/tablon-api.service`
+   `sudo systemctl daemon-reload`
+   `sudo systemctl enable --now tablon-api.service`
+
+5. Configuramos Nginx como proxy inverso para servir los archivos estáticos del cliente web y redirigir todo el tráfico del prefijo /api/ hacia el servicio local de la API:
+   `sudo nano /etc/nginx/sites-available/tablon`
+   `sudo ln -s /etc/nginx/sites-available/tablon /etc/nginx/sites-enabled/`
+   `sudo systemctl restart nginx`
+
+6. Ajustamos la configuración global del frontend en web/config.js definiendo la URL base del dominio o IP de producción:
+   `nano /opt/tablon/client/web/config.js`
+
+7. Reiniciamos la máquina virtual completa para verificar el arranque automático de todos los servicios de la pila:
+   `sudo reboot`
+
+8. Comprobamos desde el navegador y mediante comandos la respuesta del endpoint /api/version devolviendo el entorno de producción y la correcta visualización de los avisos del tablón:
+   `curl -s http://localhost/api/version`
